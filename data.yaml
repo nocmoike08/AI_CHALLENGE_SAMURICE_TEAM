@@ -1,0 +1,17 @@
+train: 'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\train'
+val: 'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\val'
+
+nc: 12
+names:
+  - Ca kho
+  - Canh bau
+  - Canh bi do
+  - Canh cai
+  - Canh chua
+  - Com
+  - Dau hu xao ca chua
+  - Ga chien
+  - Rau muong xao
+  - Thit kho
+  - Thit kho trung
+  - Trung chien

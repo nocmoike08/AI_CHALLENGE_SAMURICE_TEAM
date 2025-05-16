@@ -1,0 +1,1 @@
+yolo task=detect mode=train data='C:\Users\PC\Documents\Zalo Received Files\project-5-at-2025-05-11-13-43-7b83d22c\data.yaml' model='C:\Users\PC\Documents\Zalo Received Files\project-5-at-2025-05-11-13-43-7b83d22c\runs\detect\train\weights\best.pt' epochs=20 imgsz=960
