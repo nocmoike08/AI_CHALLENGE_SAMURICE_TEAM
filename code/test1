@@ -1,0 +1,173 @@
+import pygame, sys
+from pygame.locals import *
+import pygame_menu
+
+pygame.init()
+pygame.mixer.init()
+
+# Nhạc nền
+pygame.mixer.music.load(r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\supershy-beat.mp3')
+pygame.mixer.music.set_volume(1)
+
+# Windowed mode để test, đổi thành fullscreen nếu muốn
+DISPLAYSURF = pygame.display.set_mode((1280, 720))
+WINDOWWIDTH, WINDOWHEIGHT = DISPLAYSURF.get_size()
+
+# Màu nền
+BG_COLOR = (175, 238, 238)
+
+# Font
+FONT_PATH = r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\font.ttf'  # Thay thành font bạn có
+
+# FPS
+FPS = 60
+fpsClock = pygame.time.Clock()
+
+# Load icon exit
+exit_img = pygame.image.load(r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\exit.png')
+exit_img = pygame.transform.scale(exit_img, (40, 40))
+
+def draw_exit_button():
+    DISPLAYSURF.blit(exit_img, (WINDOWWIDTH - 50, 10))
+    return pygame.Rect(WINDOWWIDTH - 50, 10, 40, 40)
+
+def gameStart():
+    heading_image = pygame.image.load(r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\heading.png')
+    heading_image = pygame.transform.scale(heading_image, (600, 200))
+    heading_img_rect = heading_image.get_rect(center=(WINDOWWIDTH // 2, 150))
+       
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN and event.key == K_ESCAPE:
+                return
+
+        DISPLAYSURF.fill(BG_COLOR)
+        DISPLAYSURF.blit(heading_image, heading_img_rect) 
+        exit_button_rect = draw_exit_button()
+
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                if exit_button_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
+def character_carousel_menu():
+    characters = [
+        (r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\guma.png', 'Guma'),   
+        (r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\tao.png', 'Winter'),
+        (r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\mike.png', 'Zues'),
+        (r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\noledavang.png', 'Ipper'),
+    ]
+    total_characters = len(characters)
+    current_index = 0
+
+    heading_image = pygame.image.load(r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\heading.png')
+    heading_image = pygame.transform.scale(heading_image, (600, 200))
+    heading_img_rect = heading_image.get_rect(center=(WINDOWWIDTH // 2, 120))
+
+    # Tạo dict màu cho từng nhân vật
+    colors = {
+        'Guma': (128,128,0),       
+        'Ipper': (128,128,0),          
+        'Winter': (128,128,0),         
+        'Zues': (128,128,0)       
+    }
+
+    while True:
+        DISPLAYSURF.fill(BG_COLOR)
+
+        # Vẽ heading
+        DISPLAYSURF.blit(heading_image, heading_img_rect)
+
+        # Vẽ ảnh nhân vật
+        image = pygame.image.load(characters[current_index][0])
+        image = pygame.transform.scale(image, (450, 450))
+        image_rect = image.get_rect(center=(WINDOWWIDTH // 2, WINDOWHEIGHT // 2))
+        DISPLAYSURF.blit(image, image_rect)
+
+        # Vẽ tên nhân vật với màu riêng
+        font = pygame.font.Font(FONT_PATH, 60)
+        name = characters[current_index][1]
+        color = colors.get(name, (255, 255, 255))  # trắng nếu không có màu định sẵn
+        text_surface = font.render(name, True, color)
+        text_rect = text_surface.get_rect(center=(WINDOWWIDTH // 2, WINDOWHEIGHT - 100))
+        DISPLAYSURF.blit(text_surface, text_rect)
+
+        exit_button_rect = draw_exit_button()
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == KEYDOWN:
+                if event.key == K_RIGHT:
+                    current_index = (current_index + 1) % total_characters
+                elif event.key == K_LEFT:
+                    current_index = (current_index - 1) % total_characters
+                elif event.key == K_RETURN:
+                    gameStart()
+                elif event.key == K_ESCAPE:
+                    return
+
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if exit_button_rect.collidepoint(mouse_pos):
+                        pygame.quit()
+                        sys.exit()
+                    current_index = (current_index + 1) % total_characters
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
+def main_menu_manual_loop():
+    pygame.mixer.music.play(-1)
+
+    custom_theme = pygame_menu.themes.Theme(
+        background_color=pygame_menu.baseimage.BaseImage(image_path=r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\bg.jpg'),
+        widget_font=FONT_PATH,
+        widget_font_size=60,
+        widget_font_color=(255, 99, 71),
+        selection_color=(128, 0, 0),
+        title_font_size=30
+    )
+
+    menu = pygame_menu.Menu('Main Menu', WINDOWWIDTH, WINDOWHEIGHT, theme=custom_theme)
+    menu.add.button('START', character_carousel_menu)
+    menu.add.button('EXIT', pygame_menu.events.EXIT)
+
+    heading_image = pygame.image.load(r'C:\Users\PC\Documents\Zalo Received Files\project-6-at-2025-05-15-11-51-8c159b71\code\heading2.png')
+    heading_image = pygame.transform.scale(heading_image, (500, 150))
+    heading_img_rect = heading_image.get_rect(center=(WINDOWWIDTH // 2, 150))
+
+    while True:
+        DISPLAYSURF.fill(BG_COLOR)
+
+        events = pygame.event.get()
+        for event in events:
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+
+        menu.update(events)
+        menu.draw(DISPLAYSURF)
+
+        # Vẽ ảnh heading lên trên menu
+        DISPLAYSURF.blit(heading_image, heading_img_rect)
+
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
+def main():
+    while True:
+        main_menu_manual_loop()
+
+if __name__ == '__main__':
+    main()
